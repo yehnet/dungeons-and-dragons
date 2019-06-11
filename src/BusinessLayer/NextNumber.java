@@ -2,6 +2,8 @@ package BusinessLayer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -30,15 +32,12 @@ public class NextNumber implements RandomGenerator{
 
     private void loadFile(){
         try {
-            //FIXME: where the file will sit?
-            BufferedReader br = new BufferedReader(
-                    new FileReader("C:\\Users\\Netanel\\Dropbox\\Degree\\Freshment year\\Principles of object oriented programming\\Assignments\\3\\DND\\deterministic\\random_numbers.txt"));
-            String line ="";
-            while((line = br.readLine()) != null){
-                fromFile.add(Integer.parseInt(line));
+            List <String> temp = Files.readAllLines(Paths.get("random_numbers.txt"));
+            for (int i = 0; i < temp.size(); i++) {
+                fromFile.add(Integer.parseInt(temp.get(i)));
             }
         } catch (Exception e){
-            System.out.println("File not found");
+            System.out.println("File \"random_numbers.txt\" not found");
         }
         }
     @Override

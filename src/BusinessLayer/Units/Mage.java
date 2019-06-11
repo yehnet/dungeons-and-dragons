@@ -45,7 +45,7 @@ public class Mage extends Player{
         _currentMana = _currentMana - _cost;
         int hits = 0;
         Enemy e = getEnemyInRange(enemies);
-        //TODO: print cast spelled
+        notifyObserver(getName() + " cast Blizzard");
         while (hits < _hitTimes & e != null) {
             NextNumber rnd = NextNumber.getInstance();
             int defense = rnd.nextInt(e.getDefensivePoints());

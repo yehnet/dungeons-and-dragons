@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GameRunner extends BusinessLayer.Units.Observable {
-    //FIXME: load all levels, and control level number
     Player player;
     List<Enemy> enemies = new ArrayList<>();
     Board board;
@@ -81,8 +80,8 @@ public class GameRunner extends BusinessLayer.Units.Observable {
             if (player.getCurrentHealth() > 0)
                 if (!enemies.isEmpty())
                     nextRound();
-                //else
-                    //TODO: nextLevel();
+                else
+                    nextLevel();
             else lose();
             notifyObserver(board.toString());
             notifyObserver(player.toString());
@@ -131,9 +130,9 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     }
 
     private void playerTurn(Location moveTo){
-        char target = board.getFromLocation(moveTo);
-        if (target != '#'){
-            if ( target == '.' ) {
+        if (!board.isAWall(moveTo)){
+            if (board.isEmptyTile(moveTo)) {
+                //FIXME: in case of invisible trap, the path is blocked
                 player.setPosition(moveTo);
             } else
                 for ( Enemy e : enemies){
@@ -141,6 +140,7 @@ public class GameRunner extends BusinessLayer.Units.Observable {
                         notifyObserver(player.getName() + " engaged in battle with " + e.getName() + ":\n" + player.toString()+ "\n" + e.toString());
                         player.combat(e);
                         if (e.getCurrentHealth() == 0) {
+                            player.addExperience(e.getExperience());
                             board.removeUnit(e.getPosition());
                             enemies.remove(e);
                         }
@@ -151,13 +151,12 @@ public class GameRunner extends BusinessLayer.Units.Observable {
 
     private void enemiesTurn(){
         for ( Enemy e : enemies){
-            //FIXME: enemies doesnt attack
             e.nextMove(player);
+            if( player.getCurrentHealth() == 0) { // player lost all of his life.
+                lose();
+            }
         }
-        if( player.getCurrentHealth() <= 0) { // player lost all of his life.
-            player.setCurrentHealth(0);
-            lose();
-        }
+
     }
 
     private void loadUnits(char[][] map){
@@ -242,6 +241,12 @@ public class GameRunner extends BusinessLayer.Units.Observable {
         player.newRound();
     }
 
+    private void nextLevel(){
+        board.init(ui,levels[levelnum]);
+        loadUnits(board.getMap());
+        levelnum++;
+    }
+
     private void lose(){
         notifyObserver(player.getName() + " died.\n" + "You Lost.");
         Location playerLocation = player.getPosition();
@@ -251,10 +256,20 @@ public class GameRunner extends BusinessLayer.Units.Observable {
         run = false;
     }
 
+    private void win(){
+        notifyObserver(player.getName() + " win.\n" + player.toString());
+        notifyObserver( "You win.\n" + "*********Game Over*********");
+        run = false;
+    }
+
     private void init(){
-        board.init(ui,levels[levelnum]);
-        choosePlayer();
-        loadUnits(board.getMap());
+        if (levelnum < levels.length) {
+            board.init(ui, levels[levelnum]);
+            choosePlayer();
+            loadUnits(board.getMap());
+            levelnum++;
+        } else
+            win();
     }
 
     private void loadFiles(String path){

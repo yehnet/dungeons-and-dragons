@@ -62,8 +62,5 @@ public class Trap extends Enemy{
     private void setVisibility(){
         if (_visible)
             board.setNewTile(getTile() , getPosition().getX(),getPosition().getY());
-        else
-            if (board.getFromLocation(getPosition() ) != '@') //FIXME: everybody will be deleted, and nobody can step on this tile?
-                board.removeUnit(getPosition());
     }
 }

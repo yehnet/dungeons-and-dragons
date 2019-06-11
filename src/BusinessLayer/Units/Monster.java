@@ -19,7 +19,8 @@ public class Monster extends Enemy {
         //moves: 0 - up , 1 - right, 2- down , 3- left
         boolean[] moves = movesAvailable();
         if (isInRange(p.getPosition())){
-            if(getPosition().equals(p.getPosition())) {
+            if(getPosition().equals(p.getPosition().moveLeft()) | getPosition().equals(p.getPosition().moveDown())
+                    | getPosition().equals(p.getPosition().moveRight()) | getPosition().equals(p.getPosition().moveUp() )) {
                 notifyObserver(getName() + " engaged in battle with " + p.getName() +":");
                 notifyObserver(toString());
                 notifyObserver(p.toString());
@@ -84,6 +85,7 @@ public class Monster extends Enemy {
     }
 
     private boolean[] movesAvailable(){
+        //FIXME: in case of invisible trap, the path is blocked
         boolean[] moves = {false,false,false,false};
         if (isEmptyTile(getPosition().moveUp()))
             moves[0] = true;

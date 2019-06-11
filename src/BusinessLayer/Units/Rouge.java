@@ -48,10 +48,10 @@ public class Rouge extends Player {
     }
 
     private void spellCombat(Enemy e){
+        notifyObserver(getName() + " cast Fan of Knives");
         NextNumber rnd = NextNumber.getInstance();
         int defense = rnd.nextInt(e.getDefensivePoints());
         if(getAttackPoints() > defense)
-            //TODO: print cast spelled
             e.reduceHealth(getAttackPoints() - defense);
     }
 

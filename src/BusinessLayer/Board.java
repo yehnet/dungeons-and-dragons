@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Board extends Observable {
-    //FIXME: load all files/levels
     private static Board INSTANCE = null;
-    char[][] map;    //FIXME: should we do "map" of objects? instead of char
+    char[][] map;//FIXME: change to map of objects instead of char (because of invisible traps)
     NextNumber nextNumber;
 
     private Board(){
@@ -77,6 +76,16 @@ public class Board extends Observable {
         }
         return false;
     }
+
+    public boolean isAWall(Location loc){
+        try{
+            if (map[loc.getY()][loc.getX()] == '#')
+                return true;
+        } catch (ArrayIndexOutOfBoundsException e){
+        }
+        return false;
+    }
+
     public void setNewTile(char c , int x , int y){
         map[y][x] = c;
     }

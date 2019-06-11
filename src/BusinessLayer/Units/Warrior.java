@@ -31,12 +31,9 @@ public class Warrior extends Player {
          return;
      }
      _remaining = _cooldown;
-
+     notifyObserver(getName() + " cast Heal");
      int afterHeal = (getDefensivePoints() * 2) + getCurrentHealth();
-     int healthPool = getHealthPool();
-     int healPoints = Math.min(healthPool,afterHeal);
-     //TODO: print cast spelled
-     setCurrentHealth(healPoints);
+     setCurrentHealth(afterHeal);
     }
 
     public void newRound(){

@@ -65,6 +65,8 @@ public abstract class GameUnit extends Observable{
         _currentHealth = currentHealth;
         if ( _currentHealth < 0)
             _currentHealth = 0;
+        if (_currentHealth > _healthPool)
+            setMaxHealth();
     }
 
     public void reduceHealth(Integer amount){
@@ -88,6 +90,7 @@ public abstract class GameUnit extends Observable{
             _position = position;
 
     }
+
     boolean isEmptyTile(Location l){
         return board.isEmptyTile(l.getX(),l.getY());
     }
