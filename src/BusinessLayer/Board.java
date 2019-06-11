@@ -7,12 +7,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Board extends Observable {
     private static Board INSTANCE = null;
-    char[][] map;//FIXME: change to map of objects instead of char (because of invisible traps)
-    NextNumber nextNumber;
+    private char[][] map;//FIXME: change to map of objects instead of char (because of invisible traps)
+    private NextNumber nextNumber;
 
     private Board(){
         nextNumber = NextNumber.getInstance();
@@ -27,18 +26,18 @@ public class Board extends Observable {
 
     public void init(Observer o ,File f){
         register(o);
-        String text = "";
+        StringBuilder text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
-            String line = null;
+            String line;
             while ( (line = br.readLine()) != null){
-                text = text + "\n" + line;
+                text.append("\n").append(line);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
 
-        String[] lines = text.split("\n");
+        String[] lines = text.toString().split("\n");
         map = new char[lines.length -1][lines[1].length()];
 
         for (int i = 0; i < lines.length -1 ; i++) {
@@ -56,10 +55,6 @@ public class Board extends Observable {
         map[ loc.getY()][loc.getX()] = 'X';
     }
 
-    public char getFromLocation(Location target){
-        return map[target.getY()][target.getX()];
-    }
-
     public char[][] getMap() {
         return map;
     }
@@ -73,6 +68,7 @@ public class Board extends Observable {
             if (map[loc.getY()][loc.getX()] == '.')
                 return true;
         } catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
         }
         return false;
     }
@@ -82,6 +78,7 @@ public class Board extends Observable {
             if (map[loc.getY()][loc.getX()] == '#')
                 return true;
         } catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
         }
         return false;
     }
@@ -114,17 +111,15 @@ public class Board extends Observable {
     private boolean isInRange(Location loc , Location target, int range){
         double distance =
                 Math.sqrt((Math.pow(loc.getX() - target.getX(),2)) + Math.pow(loc.getY() - target.getY(),2));
-        if (distance < range)
-            return true;
-        return false;
+        return distance < range;
     }
     @Override
     public String toString(){
-        String output= "";
+        StringBuilder output= new StringBuilder();
         for (int i = 0; i < map.length -1 ; i++) {
-            output =output+ new String(map[i]) + "\n";
+            output.append(new String(map[i])).append("\n");
         }
-        output = output +  new String(map[map.length-1]);
-        return output;
+        output.append(new String(map[map.length - 1]));
+        return output.toString();
     }
 }

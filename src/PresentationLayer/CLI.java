@@ -1,15 +1,9 @@
 package PresentationLayer;
 
 import BusinessLayer.*;
-import BusinessLayer.Units.*;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
 
 public class CLI extends Observer {
-    GameRunner runner;
+    private GameRunner runner;
     public CLI(String path, boolean deterministic) {
         runner = new GameRunner(this,path, deterministic);
         choosePlayer();

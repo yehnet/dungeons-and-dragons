@@ -1,7 +1,5 @@
 package BusinessLayer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -10,9 +8,9 @@ import java.util.Queue;
 
 public class NextNumber implements RandomGenerator{
 
-    static NextNumber INSTANCE = null;
-    boolean deterministic = false;
-    Queue<Integer> fromFile;
+    private static NextNumber INSTANCE = null;
+    private boolean deterministic = false;
+    private Queue<Integer> fromFile;
 
     private NextNumber(){
     }
@@ -33,8 +31,8 @@ public class NextNumber implements RandomGenerator{
     private void loadFile(){
         try {
             List <String> temp = Files.readAllLines(Paths.get("random_numbers.txt"));
-            for (int i = 0; i < temp.size(); i++) {
-                fromFile.add(Integer.parseInt(temp.get(i)));
+            for (String num : temp) {
+                fromFile.add(Integer.parseInt(num));
             }
         } catch (Exception e){
             System.out.println("File \"random_numbers.txt\" not found");

@@ -1,7 +1,5 @@
 package BusinessLayer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -10,9 +8,9 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class NextAction implements ActionReader {
-    static NextAction INSTANCE = null;
-    boolean deterministic = false;
-    Queue<String> fromFile;
+    private static NextAction INSTANCE = null;
+    private boolean deterministic = false;
+    private Queue<String> fromFile;
 
     private NextAction(){}
 
@@ -32,9 +30,7 @@ public class NextAction implements ActionReader {
     private void loadFile(){
         try {
             List<String> temp = Files.readAllLines(Paths.get("user_input.txt"));
-            for (int i = 0; i < temp.size(); i++) {
-                fromFile.add(temp.get(i));
-            }
+            fromFile.addAll(temp);
         } catch (Exception e){
             System.out.println("File \"user_input.txt\" not found");
         }

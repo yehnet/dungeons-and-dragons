@@ -42,11 +42,11 @@ public class Warrior extends Player {
         }
     }
 
-    public Integer getCooldown() {
+    private Integer getCooldown() {
         return _cooldown;
     }
 
-    public Integer getRemaining() {
+    private Integer getRemaining() {
         return _remaining;
     }
 

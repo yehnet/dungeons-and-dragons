@@ -7,7 +7,7 @@ public abstract class Enemy extends GameUnit {
     //-------------------------------fields-----------------------------------------------------------------------------
     private Integer _experience;
     //-------------------------------constructors---------------------------------------------------------------------------
-    public Enemy(String name, char tile , Integer healthPool, Integer attackPoints, Integer defensivePoints, Integer experience, Observer o) {
+    Enemy(String name, char tile , Integer healthPool, Integer attackPoints, Integer defensivePoints, Integer experience, Observer o) {
         super(name,tile, healthPool, attackPoints, defensivePoints,o);
         _experience = experience;
     }
@@ -16,15 +16,11 @@ public abstract class Enemy extends GameUnit {
         return _experience;
     }
 
-    public void setExperience(Integer _experience) {
-        this._experience = _experience;
-    }
-
     public abstract void nextMove(Player p);
 
     public abstract boolean isInRange(Location l);
 
-    public void combat(Player p){
+    void combat(Player p){
         notifyObserver(getName() + " engaged in battle with " + p.getName() +":");
         notifyObserver(toString());
         notifyObserver(p.toString());

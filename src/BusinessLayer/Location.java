@@ -1,14 +1,14 @@
 package BusinessLayer;
 
 public class Location {
-    int _x,_y;
+    private int _x,_y;
 
-    public Location(int x , int y){
+    Location(int x , int y){
         _x = x;
         _y = y;
     }
 
-    public Location(Location newLoc){
+    Location(Location newLoc){
         _x = newLoc.getX();
         _y = newLoc.getY();
     }

@@ -2,37 +2,34 @@ package BusinessLayer;
 
 import BusinessLayer.Units.*;
 import PresentationLayer.CLI;
-import javafx.beans.Observable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class GameRunner extends BusinessLayer.Units.Observable {
-    Player player;
-    List<Enemy> enemies = new ArrayList<>();
-    Board board;
-    NextNumber nextNumber;
-    NextAction nextAction;
-    boolean run;
-    CLI ui;
-    File[] levels;
-    int levelnum;
+    private Player _player;
+    private List<Enemy> _enemies = new ArrayList<>();
+    private Board _board;
+    private NextAction _nextAction;
+    private boolean _run;
+    private CLI _ui;
+    private File[] _levels;
+    private int _levelnum;
 
 
     public GameRunner(CLI o,String path, boolean deterministic){
-        ui = o;
+        _ui = o;
         register(o);
-        nextNumber = NextNumber.getInstance();
-        nextAction = NextAction.getInstance();
+        NextNumber nextNumber = NextNumber.getInstance();
+        _nextAction = NextAction.getInstance();
         if (deterministic){
-            nextAction.setDeterministic();
+            _nextAction.setDeterministic();
             nextNumber.setDeterministic();
         }
         loadFiles(path);
-        levelnum = 0;
-        board = Board.getInstance();
+        _levelnum = 0;
+        _board = Board.getInstance();
 
 
     }
@@ -40,33 +37,33 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     public void run(){
         init();
         char act;
-        run = true;
-        notifyObserver(board.toString());
-        while (run){
+        _run = true;
+        notifyObserver(_board.toString());
+        while (_run){
             notifyObserver("------------------------------------------------for testing purposes-----------------------------------------------------------");
-            String action  = nextAction.nextAction();
+            String action  = _nextAction.nextAction();
             Location moveTo;
             if (checkInput(action)) {
                 act = action.charAt(0);
                 switch (act) {
                     case ('w'):
-                        moveTo = player.getPosition().moveUp();
+                        moveTo = _player.getPosition().moveUp();
                         playerTurn(moveTo);
                         break;
                     case ('a'):
-                        moveTo = player.getPosition().moveLeft();
+                        moveTo = _player.getPosition().moveLeft();
                         playerTurn(moveTo);
                         break;
                     case ('s'):
-                        moveTo = player.getPosition().moveDown();
+                        moveTo = _player.getPosition().moveDown();
                         playerTurn(moveTo);
                         break;
                     case ('d'):
-                        moveTo = player.getPosition().moveRight();
+                        moveTo = _player.getPosition().moveRight();
                         playerTurn(moveTo);
                         break;
                     case ('q'):
-                        player.castSpell(enemies);
+                        _player.castSpell(_enemies);
                         break;
                     case ('e'):
                         //do nothing
@@ -77,72 +74,70 @@ public class GameRunner extends BusinessLayer.Units.Observable {
                 break;
             }
             enemiesTurn();
-            if (player.getCurrentHealth() > 0)
-                if (!enemies.isEmpty())
+            if (_player.getCurrentHealth() > 0)
+                if (!_enemies.isEmpty())
                     nextRound();
                 else
                     nextLevel();
             else lose();
-            notifyObserver(board.toString());
-            notifyObserver(player.toString());
+            notifyObserver(_board.toString());
+            notifyObserver(_player.toString());
         }
     }
 
     private boolean checkInput(String input){
-        if (input == null ||  input.length() != 1 &&
-                !(input.charAt(0) == 'w'  | input.charAt(0) == 'a' | input.charAt(0) == 's' | input.charAt(0) == 'd'
-                | input.charAt(0) == 'q' | input.charAt(0) == 'e'))
-            return false;
-        return true;
+        return input != null && (input.length() == 1 &&
+                input.charAt(0) == 'w' | input.charAt(0) == 'a' | input.charAt(0) == 's' | input.charAt(0) == 'd'
+                        | input.charAt(0) == 'q' | input.charAt(0) == 'e');
     }
 
     private void choosePlayer(){
         int playerNum;
-        String input = nextAction.nextAction();
+        String input = _nextAction.nextAction();
         if(input.length()==1 && input.charAt(0) == '1' | input.charAt(0) == '2' | input.charAt(0) == '3' | input.charAt(0) == '4'
                 | input.charAt(0) == '5' | input.charAt(0) == '6' | input.charAt(0) == '7' ){
             playerNum = Integer.parseInt(input);
             switch (playerNum){
                 case(1):
-                    player = new Warrior("Jon Snow", 300, 30,4, 6,ui);
+                    _player = new Warrior("Jon Snow", 300, 30,4, 6, _ui);
                     break;
                 case(2):
-                    player = new Warrior("The Hound" , 400,20,6 , 4,ui);
+                    _player = new Warrior("The Hound" , 400,20,6 , 4, _ui);
                     break;
                 case(3):
-                    player = new Mage("Melisandre" , 160,10, 1,40,300,30,5,6,ui);
+                    _player = new Mage("Melisandre" , 160,10, 1,40,300,30,5,6, _ui);
                     break;
                 case(4):
-                    player = new Mage("Thoros of Myr", 250 , 25,3,15,150, 50,3,3,ui);
+                    _player = new Mage("Thoros of Myr", 250 , 25,3,15,150, 50,3,3, _ui);
                     break;
                 case(5):
-                    player = new Rouge("Arya Stark", 150, 40,2,20,ui);
+                    _player = new Rouge("Arya Stark", 150, 40,2,20, _ui);
                     break;
                 case(6):
-                    player = new Rouge("Bronn", 250,35,3,20,ui);
+                    _player = new Rouge("Bronn", 250,35,3,20, _ui);
                     break;
             }
             notifyObserver("You have selected:\n"
-                    + player.toString()
+                    + _player.toString()
                     + "\nUse w/s/a/d to move.\n" +
                     "Use e for special ability or q to pass." );
         }
     }
 
     private void playerTurn(Location moveTo){
-        if (!board.isAWall(moveTo)){
-            if (board.isEmptyTile(moveTo)) {
+        if (!_board.isAWall(moveTo)){
+            if (_board.isEmptyTile(moveTo)) {
                 //FIXME: in case of invisible trap, the path is blocked
-                player.setPosition(moveTo);
+                _player.setPosition(moveTo);
             } else
-                for ( Enemy e : enemies){
+                for ( Enemy e : _enemies){
                     if ( e.getPosition().equals(moveTo)){
-                        notifyObserver(player.getName() + " engaged in battle with " + e.getName() + ":\n" + player.toString()+ "\n" + e.toString());
-                        player.combat(e);
+                        notifyObserver(_player.getName() + " engaged in battle with " + e.getName() + ":\n" + _player.toString()+ "\n" + e.toString());
+                        _player.combat(e);
                         if (e.getCurrentHealth() == 0) {
-                            player.addExperience(e.getExperience());
-                            board.removeUnit(e.getPosition());
-                            enemies.remove(e);
+                            _player.addExperience(e.getExperience());
+                            _board.removeUnit(e.getPosition());
+                            _enemies.remove(e);
                         }
                     }
                 }
@@ -150,9 +145,9 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     }
 
     private void enemiesTurn(){
-        for ( Enemy e : enemies){
-            e.nextMove(player);
-            if( player.getCurrentHealth() == 0) { // player lost all of his life.
+        for ( Enemy e : _enemies){
+            e.nextMove(_player);
+            if( _player.getCurrentHealth() == 0) { // _player lost all of his life.
                 lose();
             }
         }
@@ -165,72 +160,72 @@ public class GameRunner extends BusinessLayer.Units.Observable {
             for (int j = 0; j < map[i].length; j++) {
                 switch(map[i][j]){
                     case('@'):
-                        player.setPosition(new Location(j,i));
+                        _player.setPosition(new Location(j,i));
                         break;
                     case('s'):
-                        e = new Monster("Lannister Soldier",'s',80,8,3,3,25,ui);
+                        e = new Monster("Lannister Soldier",'s',80,8,3,3,25, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('k'):
-                        e = new Monster("Lannister Knight",'k',200,14,8,4,50,ui);
+                        e = new Monster("Lannister Knight",'k',200,14,8,4,50, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('q'):
-                        e = new Monster("Queen's Guard",'q',400,20,15,5,100,ui);
+                        e = new Monster("Queen's Guard",'q',400,20,15,5,100, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('z'):
-                        e = new Monster("Wright",'z',600,30,15,3,100,ui);
+                        e = new Monster("Wright",'z',600,30,15,3,100, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('b'):
-                        e=new Monster("Bear-Wright", 'b',1000,75,30,4,250,ui);
+                        e=new Monster("Bear-Wright", 'b',1000,75,30,4,250, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('g'):
-                        e=new Monster("Giant-Wright",'g',1500,100,40,5,500,ui);
+                        e=new Monster("Giant-Wright",'g',1500,100,40,5,500, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('w'):
-                        e=new Monster("White Walker",'w',2000,150,50,6,1000,ui);
+                        e=new Monster("White Walker",'w',2000,150,50,6,1000, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('M'):
-                        e=new Monster("The Mountain",'M',1000,60,25,6,500,ui);
+                        e=new Monster("The Mountain",'M',1000,60,25,6,500, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('C'):
-                        e=new Monster("Queen Cersei", 'C',100,10,10,1,1000,ui);
+                        e=new Monster("Queen Cersei", 'C',100,10,10,1,1000, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('K'):
-                        e=new Monster("Night's King",'K',5000,300,150,8,5000,ui);
+                        e=new Monster("Night's King",'K',5000,300,150,8,5000, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('B'):
-                        e=new Trap("Bonus \"Trap\"" ,'B', 1,1,1,250,5,6,2,ui);
+                        e=new Trap("Bonus \"Trap\"" ,'B', 1,1,1,250,5,6,2, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('Q'):
-                        e=new Trap("Queen's Trap",'Q',250,50,10,100,4,10,4,ui);
+                        e=new Trap("Queen's Trap",'Q',250,50,10,100,4,10,4, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                     case('D'):
-                        e=new Trap("Death Trap",'D',500,100,20,250,6,10,3,ui);
+                        e=new Trap("Death Trap",'D',500,100,20,250,6,10,3, _ui);
                         e.setPosition(new Location(j,i));
-                        enemies.add(e);
+                        _enemies.add(e);
                         break;
                 }
             }
@@ -238,42 +233,42 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     }
 
     private void nextRound(){
-        player.newRound();
+        _player.newRound();
     }
 
     private void nextLevel(){
-        board.init(ui,levels[levelnum]);
-        loadUnits(board.getMap());
-        levelnum++;
+        _board.init(_ui, _levels[_levelnum]);
+        loadUnits(_board.getMap());
+        _levelnum++;
     }
 
     private void lose(){
-        notifyObserver(player.getName() + " died.\n" + "You Lost.");
-        Location playerLocation = player.getPosition();
-        char[][] map = board.getMap();
+        notifyObserver(_player.getName() + " died.\n" + "You Lost.");
+        Location playerLocation = _player.getPosition();
+        char[][] map = _board.getMap();
         map[playerLocation.getY()][playerLocation.getX()] = 'X';
-        board.setMap(map);
-        run = false;
+        _board.setMap(map);
+        _run = false;
     }
 
     private void win(){
-        notifyObserver(player.getName() + " win.\n" + player.toString());
+        notifyObserver(_player.getName() + " win.\n" + _player.toString());
         notifyObserver( "You win.\n" + "*********Game Over*********");
-        run = false;
+        _run = false;
     }
 
     private void init(){
-        if (levelnum < levels.length) {
-            board.init(ui, levels[levelnum]);
+        if (_levelnum < _levels.length) {
+            _board.init(_ui, _levels[_levelnum]);
             choosePlayer();
-            loadUnits(board.getMap());
-            levelnum++;
+            loadUnits(_board.getMap());
+            _levelnum++;
         } else
             win();
     }
 
     private void loadFiles(String path){
-        levels = new File(path).listFiles();
+        _levels = new File(path).listFiles();
     }
 
 }
