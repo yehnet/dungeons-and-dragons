@@ -7,7 +7,7 @@ public class Main {
             deterministic = true;
         String path = args[0];
         //For Testing
-        path = "C:\\Users\\Netanel\\Dropbox\\Degree\\Freshment year\\Principles of object oriented programming\\Assignments\\3\\DND\\levels";
+        //path = "C:\\Users\\Netanel\\Dropbox\\Degree\\Freshment year\\Principles of object oriented programming\\Assignments\\3\\DND\\levels";
         CLI view = new CLI(path, deterministic);
         view.run();
     }

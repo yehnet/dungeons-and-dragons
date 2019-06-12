@@ -13,7 +13,7 @@ public abstract class Player extends GameUnit {
     //-------------------------------constructors---------------------------------------------------------------------------
 
 
-    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensivePoints, Observer o) {
+    Player(String name, Integer healthPool, Integer attackPoints, Integer defensivePoints, Observer o) {
         super(name,'@', healthPool, attackPoints, defensivePoints,o);
         _experience = 0;
         _playerLevel = 1;
@@ -60,13 +60,13 @@ public abstract class Player extends GameUnit {
 
     public abstract void newRound();
 
-    public Integer getExperience() {
+    private Integer getExperience() {
         return _experience;
     }
 
     @Override
     public String toString() {
-        return ("\t"+getName()+"\t\t"+"Health: "+getCurrentHealth()+"\t\tAttack damage: "+getAttackPoints()+"\t\tDefense: "+getDefensivePoints() +
+        return (getName()+"\t\t"+"Health: "+getCurrentHealth()+"\t\tAttack damage: "+getAttackPoints()+"\t\tDefense: "+getDefensivePoints() +
         "\n\t\tLevel: "+getPlayerLevel()+"\t\tExperience: "+ getExperience()+"/50" );
     }
 }

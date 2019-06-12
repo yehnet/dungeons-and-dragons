@@ -11,6 +11,7 @@ import java.util.List;
 public class Board extends Observable {
     private static Board INSTANCE = null;
     private char[][] map;//FIXME: change to map of objects instead of char (because of invisible traps)
+    private boolean[][] traps;
     private NextNumber nextNumber;
 
     private Board(){
@@ -39,10 +40,19 @@ public class Board extends Observable {
 
         String[] lines = text.toString().split("\n");
         map = new char[lines.length -1][lines[1].length()];
+        traps = new boolean[lines.length-1][lines[1].length()];
 
         for (int i = 0; i < lines.length -1 ; i++) {
             map[i] = lines[i+1].toCharArray();
         }
+
+        for (int i = 0; i < lines.length-1 ; i++) {
+            for (int j = 0; j < lines[1].length() ; j++) {
+                traps[i][j] = false;
+            }
+        }
+
+
     }
 
 
@@ -50,6 +60,10 @@ public class Board extends Observable {
         map[ loc.getY()][loc.getX()] = '.';
     }
 
+    public void removeTrap(Location loc){
+        traps[loc.getY()][loc.getX()] = false;
+    }
+    
     public void killPlayer(Location loc){
         //assuming correct player location
         map[ loc.getY()][loc.getX()] = 'X';
@@ -59,16 +73,12 @@ public class Board extends Observable {
         return map;
     }
 
-    public boolean isEmptyTile(int x, int y){
-        return (map[y][x] == '.');
-    }
-
     public boolean isEmptyTile(Location loc){
         try{
-            if (map[loc.getY()][loc.getX()] == '.')
+            if (map[loc.getY()][loc.getX()] == '.' && !traps[loc.getY()][loc.getX()])
                 return true;
         } catch (ArrayIndexOutOfBoundsException e){
-            e.printStackTrace();
+            return false;
         }
         return false;
     }
@@ -78,13 +88,15 @@ public class Board extends Observable {
             if (map[loc.getY()][loc.getX()] == '#')
                 return true;
         } catch (ArrayIndexOutOfBoundsException e){
-            e.printStackTrace();
+            return false;
         }
         return false;
     }
 
     public void setNewTile(char c , int x , int y){
         map[y][x] = c;
+        if ( c == 'B' | c == 'Q' | c == 'D')
+            traps[y][x] = true;
     }
 
     public void setMap(char[][] map) {

@@ -39,6 +39,6 @@ public abstract class Enemy extends GameUnit {
 
     @Override
     public String toString() {
-        return ("\t"+getName()+"\t\t"+"Health: "+getCurrentHealth()+"\t\tAttack damage: "+getAttackPoints()+"\t\tDefense: "+getDefensivePoints());
+        return (getName()+"\t\t"+"Health: "+getCurrentHealth()+"\t\tAttack damage: "+getAttackPoints()+"\t\tDefense: "+getDefensivePoints());
     }
 }

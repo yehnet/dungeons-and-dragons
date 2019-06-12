@@ -17,7 +17,6 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     private File[] _levels;
     private int _levelnum;
 
-
     public GameRunner(CLI o,String path, boolean deterministic){
         _ui = o;
         register(o);
@@ -145,6 +144,7 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     }
 
     private void enemiesTurn(){
+        //FIXME: the enemy attacks and move at the same turn
         for ( Enemy e : _enemies){
             e.nextMove(_player);
             if( _player.getCurrentHealth() == 0) { // _player lost all of his life.

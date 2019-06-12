@@ -21,28 +21,25 @@ public class Monster extends Enemy {
         if (isInRange(p.getPosition())){
             if(getPosition().equals(p.getPosition().moveLeft()) | getPosition().equals(p.getPosition().moveDown())
                     | getPosition().equals(p.getPosition().moveRight()) | getPosition().equals(p.getPosition().moveUp() )) {
-                notifyObserver(getName() + " engaged in battle with " + p.getName() +":");
-                notifyObserver(toString());
-                notifyObserver(p.toString());
                 combat(p);
             }
             int dx = getPosition().getX() - p.getPosition().getX();
             int dy = getPosition().getY() - p.getPosition().getY();
             if (Math.abs(dx) > Math.abs(dy)) {
-                if (dx > 0 & moves[3] == true)
+                if (dx > 0 & moves[3])
                     setPosition(getPosition().moveLeft());
-                else if (moves[1] == true)
+                else if (moves[1])
                     setPosition(getPosition().moveRight());
             } else {
-                if (dy > 0 & moves[0] == true)
+                if (dy > 0 & moves[0])
                     setPosition(getPosition().moveUp());
-                else if ( moves[2] == true)
+                else if (moves[2])
                     setPosition(getPosition().moveDown());
             }
         } else {
             boolean notFound  = true;
             int moveTo= -1;
-            if (moves[0] == false &moves[1] == false &moves[2] == false &moves[3] == false ) {
+            if (!moves[0] & !moves[1] & !moves[2] & !moves[3]) {
                 notFound = false;
                 moveTo = 4;
             }
@@ -50,7 +47,7 @@ public class Monster extends Enemy {
                 moveTo = nextNumber.nextInt(4);
                 if (moveTo == 4)
                     notFound = false;
-                else if (moves[moveTo] == true)
+                else if (moves[moveTo])
                         notFound = false;
             }
             switch (moveTo){
@@ -79,13 +76,10 @@ public class Monster extends Enemy {
         int x = l.getX() - getPosition().getX();
         int y = l.getY() - getPosition().getY();
         int distance = (int)Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
-        if (distance <= _range)
-            return true;
-        return false;
+        return distance <= _range;
     }
 
     private boolean[] movesAvailable(){
-        //FIXME: in case of invisible trap, the path is blocked
         boolean[] moves = {false,false,false,false};
         if (isEmptyTile(getPosition().moveUp()))
             moves[0] = true;

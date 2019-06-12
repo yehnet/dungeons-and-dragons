@@ -19,22 +19,15 @@ public class Trap extends Enemy{
 
     //--------------------------------methods------------------------------------------------------------------------------
 
-    public Integer getRange() {
+    private Integer getRange() {
         return _range;
-    }
-
-    public Integer getRespawn() {
-        return _respawn;
-    }
-
-    public Integer getVisibilityTime() {
-        return _visibilityTime;
     }
 
     @Override
     public void nextMove(Player p) {
-        if (ticksCount == _respawn) {
+        if (ticksCount.equals(_respawn)) {
             ticksCount = 0;
+            board.removeTrap(getPosition());
             setPosition(board.getRandomEmpty(getPosition(),getRange()));
             _visible = true;
         } else {
@@ -43,10 +36,7 @@ public class Trap extends Enemy{
                 combat(p);
             }
         }
-        if (ticksCount < _visibilityTime)
-            _visible = true;
-        else
-            _visible = false;
+        _visible = ticksCount < _visibilityTime;
         setVisibility();
     }
 
@@ -54,13 +44,13 @@ public class Trap extends Enemy{
     public boolean isInRange(Location player) {
         double distance =
                 Math.sqrt((Math.pow(player.getX() - getPosition().getX(),2)) + Math.pow(player.getY() - getPosition().getY(),2));
-        if (distance < 2)
-            return true;
-        return false;
+        return distance < 2;
     }
 
     private void setVisibility(){
         if (_visible)
             board.setNewTile(getTile() , getPosition().getX(),getPosition().getY());
+        else
+            board.removeUnit(getPosition());
     }
 }

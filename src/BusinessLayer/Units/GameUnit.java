@@ -11,12 +11,12 @@ public abstract class GameUnit extends Observable{
     private String _name;
     private Location _position;//x,y coordinates
     private Integer _attackPoints, _defensivePoints, _healthPool , _currentHealth;
-    char _tile;
+    private char _tile;
     NextNumber nextNumber;
     Board board;
 
 //-------------------------------constructors---------------------------------------------------------------------------
-    public GameUnit(String name, char tile, Integer healthPool, Integer attackPoints, Integer defensivePoints, Observer o) {
+    GameUnit(String name, char tile, Integer healthPool, Integer attackPoints, Integer defensivePoints, Observer o) {
         _name = name;
         _tile = tile;
         _healthPool = healthPool;
@@ -37,7 +37,7 @@ public abstract class GameUnit extends Observable{
         return _position;
     }
 
-    public Integer getAttackPoints() {
+    Integer getAttackPoints() {
         return _attackPoints;
     }
 
@@ -45,15 +45,15 @@ public abstract class GameUnit extends Observable{
         return _defensivePoints;
     }
 
-    public void setAttackPoints(Integer _attackPoints) {
+    void setAttackPoints(Integer _attackPoints) {
         this._attackPoints = _attackPoints;
     }
 
-    public void setDefensivePoints(Integer _defensivePoints) {
+    void setDefensivePoints(Integer _defensivePoints) {
         this._defensivePoints = _defensivePoints;
     }
 
-    public Integer getHealthPool() {
+    Integer getHealthPool() {
         return _healthPool;
     }
 
@@ -61,7 +61,7 @@ public abstract class GameUnit extends Observable{
         return _currentHealth;
     }
 
-    public void setCurrentHealth(Integer currentHealth) {
+    void setCurrentHealth(Integer currentHealth) {
         _currentHealth = currentHealth;
         if ( _currentHealth < 0)
             _currentHealth = 0;
@@ -71,13 +71,15 @@ public abstract class GameUnit extends Observable{
 
     public void reduceHealth(Integer amount){
         _currentHealth = _currentHealth - amount;
+        if(getCurrentHealth() < 0)
+            setHealthPool(0);
     }
 
-    public void setHealthPool(Integer _healthPool) {
+    void setHealthPool(Integer _healthPool) {
         this._healthPool = _healthPool;
     }
 
-    public void setMaxHealth(){
+    void setMaxHealth(){
         this._currentHealth = _healthPool;
     }
 
@@ -92,7 +94,7 @@ public abstract class GameUnit extends Observable{
     }
 
     boolean isEmptyTile(Location l){
-        return board.isEmptyTile(l.getX(),l.getY());
+        return board.isEmptyTile(l);
     }
 
     char getTile(){
