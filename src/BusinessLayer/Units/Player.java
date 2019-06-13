@@ -36,7 +36,7 @@ public abstract class Player extends GameUnit {
 
     public void addExperience(int exp){
         _experience =+ exp;
-        if(_experience > 50 ) {
+        if(_experience > (_playerLevel*50) ) {
             levelUp();
             notifyObserver(getName() + " leveled up");
         }
