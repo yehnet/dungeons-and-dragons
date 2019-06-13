@@ -22,6 +22,7 @@ public abstract class Player extends GameUnit {
 
     //--------------------------------methods-------------------------------------------------------------------------------
     public void levelUp(){
+        notifyObserver(getName() + " leveled up");
         _experience = _experience - (_playerLevel * 50);
         _playerLevel = _playerLevel + 1;
         setHealthPool( getHealthPool() + (10 * _playerLevel));
@@ -38,7 +39,6 @@ public abstract class Player extends GameUnit {
         _experience =+ exp;
         if(_experience > (_playerLevel*50) ) {
             levelUp();
-            notifyObserver(getName() + " leveled up");
         }
     }
 

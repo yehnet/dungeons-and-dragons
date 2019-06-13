@@ -1,6 +1,5 @@
 package BusinessLayer.Units;
 
-import BusinessLayer.Board;
 import BusinessLayer.Location;
 import BusinessLayer.Observer;
 
@@ -19,22 +18,22 @@ public class Monster extends Enemy {
         //moves: 0 - up , 1 - right, 2- down , 3- left
         boolean[] moves = movesAvailable();
         if (isInRange(p.getPosition())){
-            if(getPosition().equals(p.getPosition().moveLeft()) | getPosition().equals(p.getPosition().moveDown())
-                    | getPosition().equals(p.getPosition().moveRight()) | getPosition().equals(p.getPosition().moveUp() )) {
+            if(getPosition().equals(p.getPosition().getLeft()) | getPosition().equals(p.getPosition().getDown())
+                    | getPosition().equals(p.getPosition().getRight()) | getPosition().equals(p.getPosition().getUp() )) {
                 combat(p);
             } else {
                 int dx = getPosition().getX() - p.getPosition().getX();
                 int dy = getPosition().getY() - p.getPosition().getY();
                 if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 0 & moves[3])
-                        setPosition(getPosition().moveLeft());
+                        setPosition(getPosition().getLeft());
                     else if (moves[1])
-                        setPosition(getPosition().moveRight());
+                        setPosition(getPosition().getRight());
                 } else {
                     if (dy > 0 & moves[0])
-                        setPosition(getPosition().moveUp());
+                        setPosition(getPosition().getUp());
                     else if (moves[2])
-                        setPosition(getPosition().moveDown());
+                        setPosition(getPosition().getDown());
                 }
             }
         } else {
@@ -53,16 +52,16 @@ public class Monster extends Enemy {
             }
             switch (moveTo){
                 case(0):
-                    setPosition(getPosition().moveUp());
+                    setPosition(getPosition().getUp());
                     break;
                 case(1):
-                    setPosition(getPosition().moveRight());
+                    setPosition(getPosition().getRight());
                     break;
                 case(2):
-                    setPosition(getPosition().moveDown());
+                    setPosition(getPosition().getDown());
                     break;
                 case(3):
-                    setPosition(getPosition().moveLeft());
+                    setPosition(getPosition().getLeft());
                     break;
                 case(4):
                     //stay
@@ -82,13 +81,13 @@ public class Monster extends Enemy {
 
     private boolean[] movesAvailable(){
         boolean[] moves = {false,false,false,false};
-        if (isEmptyTile(getPosition().moveUp()))
+        if (isEmptyTile(getPosition().getUp()))
             moves[0] = true;
-        if (isEmptyTile(getPosition().moveRight()))
+        if (isEmptyTile(getPosition().getRight()))
             moves[1] = true;
-        if(isEmptyTile(getPosition().moveDown()))
+        if(isEmptyTile(getPosition().getDown()))
             moves[2] = true;
-        if(isEmptyTile(getPosition().moveLeft()))
+        if(isEmptyTile(getPosition().getLeft()))
             moves[3] = true;
         return moves;
     }

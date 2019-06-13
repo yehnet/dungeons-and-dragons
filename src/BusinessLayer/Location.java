@@ -13,19 +13,19 @@ public class Location {
         _y = newLoc.getY();
     }
 
-    public Location moveUp(){
+    public Location getUp(){
         return new Location(_x,_y-1);
     }
 
-    public Location moveRight(){
+    public Location getRight(){
         return new Location(_x+1,_y);
     }
 
-    public Location moveDown(){
+    public Location getDown(){
         return new Location(_x,_y+1);
     }
 
-    public Location moveLeft(){
+    public Location getLeft(){
         return new Location(_x-1,_y);
     }
 

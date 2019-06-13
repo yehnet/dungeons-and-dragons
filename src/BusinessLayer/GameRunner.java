@@ -46,19 +46,19 @@ public class GameRunner extends BusinessLayer.Units.Observable {
                 act = action.charAt(0);
                 switch (act) {
                     case ('w'):
-                        moveTo = _player.getPosition().moveUp();
+                        moveTo = _player.getPosition().getUp();
                         playerTurn(moveTo);
                         break;
                     case ('a'):
-                        moveTo = _player.getPosition().moveLeft();
+                        moveTo = _player.getPosition().getLeft();
                         playerTurn(moveTo);
                         break;
                     case ('s'):
-                        moveTo = _player.getPosition().moveDown();
+                        moveTo = _player.getPosition().getDown();
                         playerTurn(moveTo);
                         break;
                     case ('d'):
-                        moveTo = _player.getPosition().moveRight();
+                        moveTo = _player.getPosition().getRight();
                         playerTurn(moveTo);
                         break;
                     case ('q'):
