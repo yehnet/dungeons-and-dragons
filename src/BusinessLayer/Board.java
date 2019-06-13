@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Board extends Observable {
     private static Board INSTANCE = null;
-    private char[][] map;//FIXME: change to map of objects instead of char (because of invisible traps)
+    private char[][] map;
     private boolean[][] traps;
     private NextNumber nextNumber;
 

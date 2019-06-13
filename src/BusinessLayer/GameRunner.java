@@ -5,6 +5,7 @@ import PresentationLayer.CLI;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GameRunner extends BusinessLayer.Units.Observable {
@@ -39,7 +40,6 @@ public class GameRunner extends BusinessLayer.Units.Observable {
         _run = true;
         notifyObserver(_board.toString());
         while (_run){
-            notifyObserver("------------------------------------------------for testing purposes-----------------------------------------------------------");
             String action  = _nextAction.nextAction();
             Location moveTo;
             if (checkInput(action)) {
@@ -73,14 +73,12 @@ public class GameRunner extends BusinessLayer.Units.Observable {
                 break;
             }
             enemiesTurn();
-            if (_player.getCurrentHealth() > 0)
-                if (!_enemies.isEmpty())
-                    nextRound();
-                else
-                    nextLevel();
-            else lose();
             notifyObserver(_board.toString());
             notifyObserver(_player.toString());
+            if (!_enemies.isEmpty())
+                nextRound();
+            else
+                nextLevel();
         }
     }
 
@@ -124,9 +122,9 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     }
 
     private void playerTurn(Location moveTo){
+        List<Enemy> enemiesKilled = new LinkedList<>();
         if (!_board.isAWall(moveTo)){
             if (_board.isEmptyTile(moveTo)) {
-                //FIXME: in case of invisible trap, the path is blocked
                 _player.setPosition(moveTo);
             } else
                 for ( Enemy e : _enemies){
@@ -134,21 +132,25 @@ public class GameRunner extends BusinessLayer.Units.Observable {
                         notifyObserver(_player.getName() + " engaged in battle with " + e.getName() + ":\n" + _player.toString()+ "\n" + e.toString());
                         _player.combat(e);
                         if (e.getCurrentHealth() == 0) {
+                            notifyObserver(e.getName() + " has been killed.");
                             _player.addExperience(e.getExperience());
                             _board.removeUnit(e.getPosition());
-                            _enemies.remove(e);
+                            enemiesKilled.add(e);
                         }
                     }
                 }
+            for (Enemy e :enemiesKilled) {
+                _enemies.remove(e);
+            }
         }
     }
 
     private void enemiesTurn(){
-        //FIXME: the enemy attacks and move at the same turn
         for ( Enemy e : _enemies){
             e.nextMove(_player);
             if( _player.getCurrentHealth() == 0) { // _player lost all of his life.
                 lose();
+                return;
             }
         }
 
@@ -237,6 +239,7 @@ public class GameRunner extends BusinessLayer.Units.Observable {
     }
 
     private void nextLevel(){
+        notifyObserver("*********************************************next level*********************************************");
         _board.init(_ui, _levels[_levelnum]);
         loadUnits(_board.getMap());
         _levelnum++;

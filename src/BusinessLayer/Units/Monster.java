@@ -22,19 +22,20 @@ public class Monster extends Enemy {
             if(getPosition().equals(p.getPosition().moveLeft()) | getPosition().equals(p.getPosition().moveDown())
                     | getPosition().equals(p.getPosition().moveRight()) | getPosition().equals(p.getPosition().moveUp() )) {
                 combat(p);
-            }
-            int dx = getPosition().getX() - p.getPosition().getX();
-            int dy = getPosition().getY() - p.getPosition().getY();
-            if (Math.abs(dx) > Math.abs(dy)) {
-                if (dx > 0 & moves[3])
-                    setPosition(getPosition().moveLeft());
-                else if (moves[1])
-                    setPosition(getPosition().moveRight());
             } else {
-                if (dy > 0 & moves[0])
-                    setPosition(getPosition().moveUp());
-                else if (moves[2])
-                    setPosition(getPosition().moveDown());
+                int dx = getPosition().getX() - p.getPosition().getX();
+                int dy = getPosition().getY() - p.getPosition().getY();
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0 & moves[3])
+                        setPosition(getPosition().moveLeft());
+                    else if (moves[1])
+                        setPosition(getPosition().moveRight());
+                } else {
+                    if (dy > 0 & moves[0])
+                        setPosition(getPosition().moveUp());
+                    else if (moves[2])
+                        setPosition(getPosition().moveDown());
+                }
             }
         } else {
             boolean notFound  = true;

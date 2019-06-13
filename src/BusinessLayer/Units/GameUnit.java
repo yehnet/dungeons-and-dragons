@@ -61,10 +61,8 @@ public abstract class GameUnit extends Observable{
         return _currentHealth;
     }
 
-    void setCurrentHealth(Integer currentHealth) {
-        _currentHealth = currentHealth;
-        if ( _currentHealth < 0)
-            _currentHealth = 0;
+    void setCurrentHealth(Integer newHealth) {
+        _currentHealth = newHealth;
         if (_currentHealth > _healthPool)
             setMaxHealth();
     }
@@ -72,7 +70,7 @@ public abstract class GameUnit extends Observable{
     public void reduceHealth(Integer amount){
         _currentHealth = _currentHealth - amount;
         if(getCurrentHealth() < 0)
-            setHealthPool(0);
+            setCurrentHealth(0);
     }
 
     void setHealthPool(Integer _healthPool) {

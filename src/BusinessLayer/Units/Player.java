@@ -34,11 +34,11 @@ public abstract class Player extends GameUnit {
         return _playerLevel;
     }
 
-    public void addExperience(int experience){
-        _experience =+ experience;
+    public void addExperience(int exp){
+        _experience =+ exp;
         if(_experience > 50 ) {
             levelUp();
-            notifyObserver(getName() + " leveled up!");
+            notifyObserver(getName() + " leveled up");
         }
     }
 
@@ -52,9 +52,6 @@ public abstract class Player extends GameUnit {
         if (attack > defense){
             e.reduceHealth(attack - defense);
             notifyObserver(getName() +" hit " + e.getName() + " for " + (attack - defense) + " damage.");
-            if (e.getCurrentHealth() == 0){
-                addExperience(e.getExperience());
-            }
         }
     }
 
@@ -67,6 +64,6 @@ public abstract class Player extends GameUnit {
     @Override
     public String toString() {
         return (getName()+"\t\t"+"Health: "+getCurrentHealth()+"\t\tAttack damage: "+getAttackPoints()+"\t\tDefense: "+getDefensivePoints() +
-        "\n\t\tLevel: "+getPlayerLevel()+"\t\tExperience: "+ getExperience()+"/50" );
+        "\n\t\tLevel: "+getPlayerLevel()+"\t\tExperience: "+ getExperience()+"/"+_playerLevel*50 );
     }
 }
